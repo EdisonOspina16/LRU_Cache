@@ -16,13 +16,15 @@ class DoublyLinkedList:
             self.tail = node
             return
 
-        self.head.prev = node #Se asigna el nodo previo del nodo que es actualmente head
-        node.next = self.head #nuevo nodo apunta al head
+        self.head.prev = node # El nodo actual de head apunta hacia atrás al nuevo nodo
+        node.next = self.head #nuevo nodo apunta al head actual
         self.head = node #nodo se convierte en el nuevo head
 
     def move_to_front(self, node):
-        if self.head is node:
+
+        if self.head is node: #Si el nodo ya esta al frente, no hacemos nada
             return
+
         node.prev.next = node.next
         if node.next: #Si no es el ultimo
             node.next.prev = node.prev
