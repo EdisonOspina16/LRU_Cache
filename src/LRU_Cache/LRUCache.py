@@ -1,11 +1,13 @@
-from DoubleLinkedList import DoublyLinkedList
+from typing import Generic, TypeVar
+from DoubleLinkedList import Node, DoublyLinkedList
+T = TypeVar("T")
 
 
-class LRUCache:
+class LRUCache(Generic[T]):
     def __init__(self, capacity: int):
+        self.queue: DoublyLinkedList[T] = DoublyLinkedList()
         self.capacity = capacity
         self.cache = dict()
-        self.queue = DoublyLinkedList()
         self.len = 0
 
     def get(self, key):
@@ -16,7 +18,7 @@ class LRUCache:
         else:
             return -1
 
-    def put(self, key, value):
+    def put(self, key, value) -> None:
         node = self.cache.get(key)
         if node is not None:
             node.value = value

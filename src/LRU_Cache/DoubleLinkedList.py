@@ -1,33 +1,37 @@
-class Node:
+from typing import Generic, TypeVar
+T = TypeVar("T")
+
+
+class Node(Generic[T]):
     def __init__(self, key, value):
         self.key = key
         self.value = value
-        self.prev = None  # punteros al nodo anterior y siguiente en la lista.
-        self.next = None
+        self.next: DoublyLinkedList | None = None
+        self.prev: DoublyLinkedList | None = None
 
 
-class DoublyLinkedList:
+class DoublyLinkedList(Generic[T]):
     def __init__(self):
-        self.head = None  # referencia al primer nodo
-        self.tail = None   # referencia al ultimo nodo
+        self.head = None
+        self.tail = None
 
-    def add_to_front(self, node):  # Inserta un nodo al inicio de la lista
-        if not self.head:   # verifica si la lista esta vacia
+    def add_to_front(self, node):
+        if not self.head:
             self.head = node
             self.tail = node
             return
 
-        self.head.prev = node  # El nodo actual de head apunta hacia atrás al nuevo nodo
-        node.next = self.head  # nuevo nodo apunta al head actual
-        self.head = node  # nodo se convierte en el nuevo head
+        self.head.prev = node
+        node.next = self.head
+        self.head = node
 
     def move_to_front(self, node):
 
-        if self.head is node:  # Si el nodo ya esta al frente, no hacemos nada
+        if self.head is node:
             return
 
         node.prev.next = node.next
-        if node.next:  # Si no es el ultimo
+        if node.next:
             node.next.prev = node.prev
         if not node.next:
             self.tail = node.prev
