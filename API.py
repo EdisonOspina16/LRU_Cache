@@ -27,5 +27,6 @@ print(f"Tiempo de respuesta sin caché: {elapsed_time:.4f} segundos")
 
 
 # medir el tiempo con la cache
+
 def fetch_weather_with_cache():
     pass
