@@ -12,14 +12,16 @@ class DoublyLinkedList:
         self.tail = None   # referencia al ultimo nodo
 
     def add_to_front(self, node):  # Inserta un nodo al inicio de la lista
-        if not self.head:   # verifica si la lista esta vacia
-            self.head = node
-            self.tail = node
-            return
+        node.prev = None
+        node.next = self.head  # Conectar el nuevo nodo al head actual
 
-        self.head.prev = node  # El nodo actual de head apunta hacia atrás al nuevo nodo
-        node.next = self.head  # nuevo nodo apunta al head actual
-        self.head = node  # nodo se convierte en el nuevo head
+        if self.head:
+            self.head.prev = node  # Asegurar que el head actual apunte al nuevo nodo
+
+        self.head = node  # Actualizar head al nuevo nodo
+
+        if self.tail is None:  # Si la lista estaba vacía, tail también debe apuntar al nuevo nodo
+            self.tail = node
 
     def move_to_front(self, node):
 

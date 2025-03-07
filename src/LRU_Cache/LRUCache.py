@@ -1,4 +1,5 @@
 from DoubleLinkedList import DoublyLinkedList
+from DoubleLinkedList import Node
 
 
 class LRUCache:
@@ -14,7 +15,7 @@ class LRUCache:
             self.queue.move_to_front(node)
             return node.value
         else:
-            return -1
+            return None
 
     def put(self, key, value):
         node = self.cache.get(key)
@@ -29,3 +30,8 @@ class LRUCache:
                 return
             del (self.cache[node_to_drop.key])
             self.len -= 1
+
+        new_node = Node(key, value)
+        self.cache[key] = new_node
+        self.queue.add_to_front(new_node)  # ✅ Ahora `add_to_front` está corregido
+        self.len += 1
