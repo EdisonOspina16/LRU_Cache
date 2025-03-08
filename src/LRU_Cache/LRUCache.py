@@ -1,13 +1,12 @@
-from typing import Generic, TypeVar
-from DoubleLinkedList import Node, DoublyLinkedList
-T = TypeVar("T")
+from DoubleLinkedList import DoublyLinkedList
+from DoubleLinkedList import Node
 
 
-class LRUCache(Generic[T]):
+class LRUCache:
     def __init__(self, capacity: int):
-        self.queue: DoublyLinkedList[T] = DoublyLinkedList()
         self.capacity = capacity
         self.cache = dict()
+        self.queue = DoublyLinkedList()
         self.len = 0
 
     def get(self, key):
@@ -16,9 +15,9 @@ class LRUCache(Generic[T]):
             self.queue.move_to_front(node)
             return node.value
         else:
-            return -1
+            return None
 
-    def put(self, key, value) -> None:
+    def put(self, key, value):
         node = self.cache.get(key)
         if node is not None:
             node.value = value
@@ -31,3 +30,8 @@ class LRUCache(Generic[T]):
                 return
             del (self.cache[node_to_drop.key])
             self.len -= 1
+
+        new_node = Node(key, value)
+        self.cache[key] = new_node
+        self.queue.add_to_front(new_node)  # ✅ Ahora `add_to_front` está corregido
+        self.len += 1
