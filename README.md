@@ -36,4 +36,4 @@ API_KEY = 'tu_clave_de_api_aqui'
 - Edison Ospina      --> [EdisonOspina16](https://github.com/EdisonOspina16)
 - Juan Jose Cano     --> [Juanjosecano318](https://github.com/Juanjosecano318)
 - Ximena Ruiz Arias  --> [Ximerza](https://github.com/ximerza)
-- Steven             --> [JHONCE79](https://github.com/JHONCE79)
+- Steven Ceballos    --> [JHONCE79](https://github.com/JHONCE79)
