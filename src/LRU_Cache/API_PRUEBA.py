@@ -37,10 +37,15 @@ def fetch_weather_with_cache():
     print(f"[DEBUG] Cache content: {cached_data}")  # Depuración
 
     if cached_data and isinstance(cached_data, dict):
-        print(
-            f"[Con caché] Clima en Medellín: {cached_data['weather'][0]['description']}, {cached_data['main']['temp']}°C")
-        print("Tiempo de respuesta con caché: ~0.0001 segundos (instantáneo)")
-        return cached_data
+        start_time = time.time()  # Inicia el cronómetro
+        result = cached_data  # Obtiene los datos de la caché
+        end_time = time.time()  # Detiene el cronómetro
+
+        elapsed_time = end_time - start_time  # Calcula el tiempo transcurrido
+
+        print(f"[Con caché] Clima en Medellín: {result['weather'][0]['description']}, {result['main']['temp']}°C")
+        print(f"Tiempo de respuesta con caché: {elapsed_time:.6f} segundos")  # Imprime el tiempo real
+        return result
 
     print("[INFO] No se encontraron datos en caché. Haciendo solicitud a la API...")
 
