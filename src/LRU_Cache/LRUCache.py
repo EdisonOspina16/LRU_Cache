@@ -3,7 +3,8 @@ from DoubleLinkedList import Node
 
 
 class LRUCache:
-    def __init__(self, capacity: int):
+
+    def __init__(self, capacity):
         self.capacity = capacity
         self.cache = dict()
         self.queue = DoublyLinkedList()
@@ -33,5 +34,5 @@ class LRUCache:
 
         new_node = Node(key, value)
         self.cache[key] = new_node
-        self.queue.add_to_front(new_node)  # ✅ Ahora `add_to_front` está corregido
+        self.queue.add_to_front(new_node)
         self.len += 1

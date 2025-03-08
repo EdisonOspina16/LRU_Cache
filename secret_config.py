@@ -1,1 +1,2 @@
-API_KEY = 'c095624566377a06175d2d3458b82478'
+API_KEY = 'tu_clave_de_api_aqui'
+

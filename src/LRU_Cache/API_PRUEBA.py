@@ -12,7 +12,10 @@ cache = LRUCache(capacity=5)
 
 
 def fetch_weather():
-    """Obtiene el clima sin caché"""
+    """
+    Obtiene el clima sin caché
+
+    """
     start_time = time.time()
     response = requests.get(URL)
     end_time = time.time()
@@ -60,7 +63,7 @@ def fetch_weather_with_cache():
     return data
 
 
-# 🚀 PRUEBAS
+# PRUEBAS
 print("🔵 Ejecutando sin caché:")
 fetch_weather()  # Primera vez sin caché
 
