@@ -28,7 +28,8 @@ class LRUCache:
         if self.size >= self.capacity:
             #si la cache esta llena, elimina el menos usado (tail)
             node_to_remove = self.list.pop_back()
-            if not node_to_remove:
+            if\
+                    node_to_remove:
                 del (self.cache[node_to_remove.key])
                 self.size -= 1
 
