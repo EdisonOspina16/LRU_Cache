@@ -1,8 +1,4 @@
-from typing import Generic, TypeVar
-T = TypeVar("T")
-
-
-class Node(Generic[T]):
+class Node:
     def __init__(self, key, value):
         self.key = key
         self.value = value
@@ -10,7 +6,7 @@ class Node(Generic[T]):
         self.next = None
 
 
-class DoublyLinkedList(Generic[T]):
+class DoublyLinkedList:
 
     def __init__(self):
         self.head = None
@@ -30,23 +26,30 @@ class DoublyLinkedList(Generic[T]):
         if self.head is node:
             return
 
-        node.prev.next = node.next
+        if node.prev is not None:
+            node.prev.next = node.next
         if node.next is not None:
             node.next.prev = node.prev
-        if not node.next:
+        if self.tail is node:
             self.tail = node.prev
+
+        #mover al frente
         node.prev = None
-        self.add_to_front(node)
+        node.next = self.head
+
+        if self.head:
+            self.head.prev = node
+        self.head = node
 
     def pop_back(self):
         if not self.tail:
             return None
+        node = self.tail
         if self.tail == self.head:
-            node = self.head
-            self.tail = None
             self.head = None
-            return node
-        tail = self.tail
-        self.tail = tail.prev
-        self.tail.next = None
-        return tail
+            self.tail = None
+        else:
+            self.tail = node.prev
+            self.tail.next = None
+        node.prev = None
+        return node
