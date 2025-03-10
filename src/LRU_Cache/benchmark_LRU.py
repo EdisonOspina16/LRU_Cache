@@ -6,7 +6,6 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 import secret_config
 from src.LRU_Cache.LRUCache import LRUCache
-import psutil
 
 class CachePerformanceMetrics:
     def __init__(self, cache_capacity=2):
@@ -15,29 +14,17 @@ class CachePerformanceMetrics:
         self.cache_misses = 0
         self.api_response_times = []
         self.cache_response_times = []
-        self.memory_usage = []  # Lista para almacenar uso de memoria
-    
-    def get_memory_usage(self):
-        """Obtiene el uso actual de memoria en MB."""
-        process = psutil.Process(os.getpid())
-        return process.memory_info().rss / (1024 * 1024)  # Convertir a MB
-    
+        
     def fetch_weather(self, city):
         """
-        Obtiene el clima sin caché y registra el tiempo de respuesta y memoria
+        Obtiene el clima sin caché y registra el tiempo de respuesta
         """
-        memory_before = self.get_memory_usage()
-        start_time = time.time()
-        
         url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={secret_config.API_KEY}&units=metric"
+        start_time = time.time()
         response = requests.get(url)
-        
         end_time = time.time()
-        memory_after = self.get_memory_usage()
-        
         elapsed_time = end_time - start_time
         self.api_response_times.append(elapsed_time)
-        self.memory_usage.append(memory_after - memory_before)
 
         if response.status_code == 200:
             data = response.json()
@@ -47,32 +34,24 @@ class CachePerformanceMetrics:
             data = None
 
         print(f"Tiempo de respuesta sin caché: {elapsed_time:.4f} segundos")
-        print(f"Uso de memoria sin caché: {memory_after - memory_before:.4f} MB")
         return data
 
     def fetch_weather_with_cache(self, city):
         """
-        Intenta obtener datos del clima desde la caché y registra hits/misses, tiempo y memoria
+        Intenta obtener datos del clima desde la caché y registra hits/misses
         """
-        memory_before = self.get_memory_usage()
         start_time = time.time()
-        
         cached_data = self.cache.get(city)
-        
         end_time = time.time()
-        memory_after = self.get_memory_usage()
-        
         elapsed_time = end_time - start_time
-        self.memory_usage.append(memory_after - memory_before)
         
         if cached_data and isinstance(cached_data, dict):
             self.cache_hits += 1
             self.cache_response_times.append(elapsed_time)
             print(f"[Con caché] Clima en {city}: {cached_data['weather'][0]['description']}, {cached_data['main']['temp']}°C")
             print(f"Tiempo de respuesta con caché: {elapsed_time:.4f} segundos")
-            print(f"Uso de memoria con caché: {memory_after - memory_before:.4f} MB")
             return cached_data
-        
+
         print("[INFO] No se encontraron datos en caché. Haciendo solicitud a la API...")
         self.cache_misses += 1
         data = self.fetch_weather(city)
@@ -113,11 +92,6 @@ class CachePerformanceMetrics:
                 avg_cache = statistics.mean(self.cache_response_times)
                 speedup = (avg_api / avg_cache) if avg_cache > 0 else 0
                 print(f"\nAceleración promedio con caché: {speedup:.2f}x")
-        
-        if self.memory_usage:
-            print(f"\nUso promedio de memoria: {statistics.mean(self.memory_usage):.4f} MB")
-            print(f"Uso máximo de memoria: {max(self.memory_usage):.4f} MB")
-            print(f"Uso mínimo de memoria: {min(self.memory_usage):.4f} MB")
     
     def run_performance_test(self, cities, iterations=2):
         """
@@ -132,10 +106,31 @@ class CachePerformanceMetrics:
                 
         self.print_performance_metrics()
 
-if __name__ == "__main__":
+def main():
+    # Crear instancia de métricas con capacidad de caché personalizable
     cache_size = int(input("Ingrese el tamaño de la caché: "))
     metrics = CachePerformanceMetrics(cache_capacity=cache_size)
     
-    test_cities = ["Madrid", "London", "New York", "Tokyo", "Madrid", "Paris", "London", "Berlin", "Madrid"]
-    iterations = int(input("Ingrese el número de iteraciones para el test: "))
-    metrics.run_performance_test(test_cities, iterations)
+    # Opción 1: Test automático
+    print("\n1. Test automático con ciudades predefinidas")
+    print("2. Test manual (ingresar ciudades)")
+    choice = input("Seleccione una opción (1/2): ")
+    
+    if choice == "1":
+        # Lista de ciudades para prueba automática
+        test_cities = ["Madrid", "London", "New York", "Tokyo", "Madrid", "Paris", "London", "Berlin", "Madrid"]
+        iterations = int(input("Ingrese el número de iteraciones para el test: "))
+        metrics.run_performance_test(test_cities, iterations)
+    else:
+        # Modo manual similar al script original
+        while True:
+            city = input("\nIngrese el nombre de una ciudad para consultar el clima (o 'salir' para terminar): ").strip()
+            if city.lower() == 'salir':
+                print("Generando métricas finales...")
+                metrics.print_performance_metrics()
+                print("Saliendo del programa...")
+                break
+            metrics.fetch_weather_with_cache(city)
+
+if __name__ == "__main__":
+    main()
