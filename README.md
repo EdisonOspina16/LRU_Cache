@@ -20,11 +20,15 @@ Para ejecutar este proyecto, necesitas tener instalado lo siguiente:
 
 - Python 3.12 o superior
 - La biblioteca `requests` para realizar solicitudes HTTP.
+- La biblioteca `matplotlib` para realizar graficas.
 
-Puedes instalar `requests` ejecutando el siguiente comando:
+Puedes instalar `requests` y `matplotlib`  ejecutando el siguiente comando:
 
 ```bash
 pip install requests
+```
+```bash
+pip install matplotlib
 ```
 Además, necesitarás una clave de API de OpenWeather, que puedes obtener registrándote en su sitio web: OpenWeather.
 Una vez que obtengas tu clave, guárdala en un archivo llamado ```secret_config.py``` con el siguiente formato:
